@@ -2,7 +2,9 @@
 name = "lacuna-core"
 version = "0.1.0"
 edition = "2024"
-rust-version = "1.85"
+# 1.88, not the 1.85 that smtlite 0.2.0 declares: smtlite uses let-chains,
+# which stabilized in 1.88. 0.1.0 was published with 1.85 before CI caught it.
+rust-version = "1.88"
 license = "Apache-2.0"
 description = "Diagnosis without repair: typed stops, flip and property ledgers, and trust-carrying certificates over a concolic report"
 readme = "README.md"
