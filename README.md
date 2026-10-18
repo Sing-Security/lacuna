@@ -1,5 +1,9 @@
 # LACUNA - Demand-Driven Semantic Closure Engine
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23454768.svg)](https://doi.org/10.5281/zenodo.23454768)
+[![crates.io](https://img.shields.io/crates/v/lacuna-core.svg)](https://crates.io/crates/lacuna-core)
+[![Rust](https://img.shields.io/badge/rust-1.88%2B-orange.svg?logo=rust)](https://www.rust-lang.org)
+
 **Milestone 1: diagnosis without repair.**
 
 LACUNA is a *semantic coverage authority* for concolic and symbolic-execution
