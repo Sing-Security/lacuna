@@ -1,14 +1,14 @@
-//! LACUNA — the **Demand-Driven Semantic Closure Engine**, Milestone 1:
+//! LACUNA - the **Demand-Driven Semantic Closure Engine**, Milestone 1:
 //! **diagnosis without repair**.
 //!
-//! LACUNA reads what the hybrid engine already measured — its flip ledger, its
-//! gap notes, its stop condition — and answers the question a report reader
+//! LACUNA reads what the hybrid engine already measured - its flip ledger, its
+//! gap notes, its stop condition - and answers the question a report reader
 //! actually has: *which semantic gap blocks which coverage, and at what trust
 //! does the engine know it?*
 //!
 //! Milestone 1 synthesizes nothing and repairs nothing. It:
 //!
-//! 1. **Classifies** every raw gap into the blocker taxonomy — case A
+//! 1. **Classifies** every raw gap into the blocker taxonomy - case A
 //!    (unmodelled syscall), case B (lift cap / lift gap), case C (sealed
 //!    hash/derivation), case D (symbolic address outside the model's window),
 //!    plus the classes a real report needs to stay honest (solver bound,
@@ -22,7 +22,7 @@
 //!    is not the same fact as a post-run readback, and a confirmed witness,
 //!    a proven local negative, an unreproduced model and a missed run are
 //!    four different claims.
-//! 4. **States the stop** — including what the stop does *not* say: budget
+//! 4. **States the stop** - including what the stop does *not* say: budget
 //!    stops do not carry "exhausted", and the diagnosis says so instead of
 //!    letting silence read as coverage.
 //! 5. **Attaches trust** to every claim via the fixed table (never inferred
@@ -35,7 +35,7 @@
 //!
 //! The output is a [`Diagnosis`]: counts, a classified gap list, and a
 //! certificate per claim. [`Diagnosis::render`] is the deterministic text
-//! form; everything is also a public field for machine consumers — LACUNA is
+//! form; everything is also a public field for machine consumers - LACUNA is
 //! meant to become the semantic coverage authority the rest of the
 //! experimental stack queries.
 //!
@@ -48,7 +48,7 @@
 //! host as sink records, so they are inventoried separately, not here.
 //!
 //! **Scope.** Every item in this crate is stated over the report contract in
-//! [`concolic_core`] — traces, decisions, outcomes, budgets. Nothing here
+//! [`concolic_core`] - traces, decisions, outcomes, budgets. Nothing here
 //! names an instruction set, a register, a syscall number or a memory
 //! layout; a frontend supplies the report and (optionally) its gap patterns.
 
@@ -67,11 +67,11 @@ use concolic_core::{FlipOutcome, Opts, PropertyOutcome, Report};
 pub enum BlockerClass {
     /// **Case A.** The call is outside the host's syscall model: the lift
     /// trapped on it and the run ended at the call. The model's answer (if it
-    /// had one) would be an approximation — nothing downstream of it was
+    /// had one) would be an approximation - nothing downstream of it was
     /// observed.
     UnmodelledSyscall,
     /// **Case B.** The run ended at a construct the lifted module does not
-    /// carry: a call past the function cap, an opcode the lift refuses — the
+    /// carry: a call past the function cap, an opcode the lift refuses - the
     /// lift's emitted `unreachable`. Raising the lift's call cap (or lifting
     /// the gap) is the next move; the stop is reporting the module's extent,
     /// not the program's behavior.
@@ -86,13 +86,13 @@ pub enum BlockerClass {
     /// for: the concrete execution landed on a cell outside the bounded
     /// address window (the seed's declared regions plus the cells the walk
     /// touched, capped per site). The run stopped AT the access, so nothing
-    /// past it was observed — and unlike a solver bound, more time would not
+    /// past it was observed - and unlike a solver bound, more time would not
     /// change the answer: the model is bounded by construction. Widening the
     /// window (a seed that declares the region, or a wider address window)
     /// is the next move.
     UnmodelledAddress,
     /// The solver hit a configured bound (clauses, budget) before a verdict.
-    /// Not a negative answer — the absence of one.
+    /// Not a negative answer - the absence of one.
     SolverGaveUp,
     /// The engines' own replay limits: walk/replay divergences, walk step
     /// budgets, register-model drift, host-model allocation failure. Says
@@ -105,7 +105,7 @@ pub enum BlockerClass {
     /// about what the program would have done past it.
     GuestTrap,
     /// No adapter pattern matched. Preserved verbatim, counted, and stated as
-    /// unclassified — a gap the diagnosis cannot yet name is reported as
+    /// unclassified - a gap the diagnosis cannot yet name is reported as
     /// such, never dropped and never guessed.
     Unclassified,
 }
@@ -129,7 +129,7 @@ impl BlockerClass {
 }
 
 /// How much a claim is worth. Assigned by the fixed table in
-/// [`diagnose`] and its certificate step — never by the claim's tone, and never raised
+/// [`diagnose`] and its certificate step - never by the claim's tone, and never raised
 /// because a result would be more useful at a higher level.
 // No `Ord`: trust is not a total order that can be sorted or `min`-ed. A
 // claim is never stronger than its weakest load-bearing evidence, but the
@@ -142,7 +142,7 @@ pub enum Trust {
     /// that completed (`Unsat`). The claim's own text says what it covers.
     Exact,
     /// Reserved: reasoning over a sound over-approximation (the planned
-    /// theory layer — congruence-only claims, UF/array reasoning). Nothing
+    /// theory layer - congruence-only claims, UF/array reasoning). Nothing
     /// in M1 earns this level, and nothing may claim it until the reasoning
     /// that would justify it exists.
     SoundOverApprox,
@@ -195,7 +195,7 @@ pub struct PropertyRow {
     pub input: Vec<(String, u64)>,
 }
 
-/// Why the search stopped — derived from the report's `exhausted` flag and the
+/// Why the search stopped - derived from the report's `exhausted` flag and the
 /// budgets the session ran under.
 ///
 /// `Exhausted` wins when both hold: emptying the frontier is the only
@@ -230,7 +230,7 @@ pub enum Stop {
 }
 
 impl Stop {
-    /// A one-line statement of what the stop means — and what it does not.
+    /// A one-line statement of what the stop means - and what it does not.
     #[must_use]
     pub fn claim(self) -> &'static str {
         match self {
@@ -277,7 +277,7 @@ pub struct Certificate {
 // region:    --- adapter
 
 /// The site a gap text names: `… at 0x…` (most producers) or `… invoke 0x…`
-/// (an alternate producer spelling). `None` when the text carries no site —
+/// (an alternate producer spelling). `None` when the text carries no site -
 /// the certificate then states the fact without inventing one.
 #[must_use]
 pub fn site_in(text: &str) -> Option<u64> {
@@ -367,7 +367,7 @@ impl Rule {
 ///
 /// The first matching rule wins, so the order is the precedence order and a
 /// more specific pattern must come first. No match is
-/// [`BlockerClass::Unclassified`] — preserved, counted and stated as such,
+/// [`BlockerClass::Unclassified`] - preserved, counted and stated as such,
 /// never dropped and never guessed.
 #[derive(Clone, Debug)]
 pub struct Classifier {
@@ -868,7 +868,7 @@ pub fn diagnose_with(report: &Report, opts: &Opts, classifier: &Classifier) -> D
 
 // region:    --- rendering
 
-/// `x=0x1337, mem+96=0x5` — the input bindings, one deterministic string.
+/// `x=0x1337, mem+96=0x5` - the input bindings, one deterministic string.
 fn fmt_input(input: &[(String, u64)]) -> String {
     input.iter().map(|(n, v)| format!("{n}={v:#x}")).collect::<Vec<_>>().join(", ")
 }
@@ -945,7 +945,7 @@ impl Diagnosis {
     /// have to re-derive it from the ledger or trust the stop certificate's
     /// tone.
     ///
-    /// **Scope.** This is a predicate over the **flip** ledger — decision
+    /// **Scope.** This is a predicate over the **flip** ledger - decision
     /// coverage. The property ledger is separate: a query that never reached
     /// a verdict (`SolverUnknown`, `NotPosed`, `RunFailed`) leaves the
     /// invariant question open, and this method does not speak for it.

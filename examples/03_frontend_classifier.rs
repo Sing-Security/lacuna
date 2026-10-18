@@ -25,7 +25,7 @@ use lacuna_core::{
 
 fn main() {
     // A note only this (hypothetical) engine emits. The generic table cannot
-    // name it, so it stays `Unclassified` — preserved, counted, never guessed.
+    // name it, so it stays `Unclassified` - preserved, counted, never guessed.
     let note = "producer: the key schedule of attacker bytes is opaque at 0x401120";
     let generic = classify_gap(note);
     assert_eq!(BlockerClass::Unclassified, generic.class);

@@ -1,4 +1,4 @@
-# LACUNA — Demand-Driven Semantic Closure Engine
+# LACUNA - Demand-Driven Semantic Closure Engine
 
 **Milestone 1: diagnosis without repair.**
 
@@ -10,8 +10,8 @@ question:
 > know it?
 
 It does not synthesize approximations, and it does not repair gaps. It reads
-what the engine measured — the stop condition, the gap notes, the flip
-ledger, the property-query ledger — and emits a **trust-carrying diagnosis**:
+what the engine measured - the stop condition, the gap notes, the flip
+ledger, the property-query ledger - and emits a **trust-carrying diagnosis**:
 one certificate per claim, each stating what was observed and what that
 observation licenses.
 
@@ -19,7 +19,7 @@ The theory is stated at the *report boundary*, not at an instruction set.
 Nothing in this crate names a register, a syscall number, a memory layout, or
 a vendor vocabulary. Any frontend that emits the
 [`concolic-core`](https://crates.io/crates/concolic-core) contract is
-diagnosed by the same code and receives the same semantics — the
+diagnosed by the same code and receives the same semantics - the
 frontend-invariance principle (paper §2.1).
 
 ```toml
@@ -124,8 +124,8 @@ structured outcome, the **property-query ledger** by structured outcome, the
 machine consumers; `render()` is a deterministic text form for humans.
 
 `Certificate { site, class, trust, claim, evidence }` is the unit of
-accountability. Certificate order is a fixed contract — stop, then gaps, then
-flips, then properties, each in report order — so offsets are stable across
+accountability. Certificate order is a fixed contract - stop, then gaps, then
+flips, then properties, each in report order - so offsets are stable across
 sessions that differ only in tail length.
 
 ### Stop semantics
@@ -135,14 +135,14 @@ why `diagnose` takes `Opts` as well as the report.
 
 | Stop | Means | Does **not** mean |
 |---|---|---|
-| `Exhausted` | The report marks the search complete: the frontier emptied with no attempt skipped by a budget and every discovered path walked. When every attempt is also exact, that licenses "every decision the solver saw was flipped or proven unflippable under its prefix". | A coverage claim by itself — the adequacy condition is checked separately (see below). Nor that the *program* has no more behaviors: only the modelled surface. Sealed constants and unmodelled answers were never variable. |
+| `Exhausted` | The report marks the search complete: the frontier emptied with no attempt skipped by a budget and every discovered path walked. When every attempt is also exact, that licenses "every decision the solver saw was flipped or proven unflippable under its prefix". | A coverage claim by itself - the adequacy condition is checked separately (see below). Nor that the *program* has no more behaviors: only the modelled surface. Sealed constants and unmodelled answers were never variable. |
 | `BudgetRuns` | The run budget was hit; decisions remain unposed. | Exhaustion. The claim text says "NOT empty" in so many words. |
 | `BudgetFlips` | The verified-flip budget was hit; further flips were possible. | Exhaustion. |
 | `Undetermined` | The search stopped with neither an emptied frontier nor a reached budget; the report does not mark exhaustion, and any limit it recorded is in the gap ledger. | Anything. Coverage is open, and the diagnosis says so. |
 
 Exhaustion wins over a budget that was also reached, matching the engine's
 check-before-attempt discipline: counters never overshoot the budgets they
-are read against. The mandatory base run is the one exception at the edge —
+are read against. The mandatory base run is the one exception at the edge -
 it happens even when `max_runs` is 0, so `runs` can be 1 there.
 
 `Exhausted` is a report fact; it is not by itself a coverage claim. Theorem 1's
@@ -152,7 +152,7 @@ outcome (`Verified`, `ProvenUnflippable`, `AlreadyExplored`). An `Unconfirmed`,
 condition unmet. The stop certificate therefore says `Exact` only when the
 ledger is all-exact, and otherwise says `Unknown` with an explicit "not a
 coverage claim"; its evidence records `unresolved_attempts`. Machine consumers
-should call `Diagnosis::coverage_licensed()` — the same predicate — rather
+should call `Diagnosis::coverage_licensed()` - the same predicate - rather
 than comparing `stop` to `Exhausted` by hand. `BudgetRuns`, `BudgetFlips` and
 `Undetermined` are `Exact`, `Exact` and `Unknown` about the stop respectively;
 none of them licenses coverage.
@@ -169,18 +169,18 @@ exactly for `Verified`, and a hand-built report must do the same.
 ### Blocker taxonomy
 
 Free-text gap notes are classified by a decision list (Proposition 3: total
-and single-valued). An unrecognized note is `Unclassified` — preserved
+and single-valued). An unrecognized note is `Unclassified` - preserved
 verbatim, counted, never guessed.
 
 | Class | Meaning | Trust |
 |---|---|---|
 | `UnmodelledSyscall` (A) | A call outside the host's model; the lift trapped and the run ended there. | `Empirical` |
-| `LiftCap` (B) | The run ended at a construct the lifted module does not carry — the *module's* extent, not the program's behavior. | `Empirical` |
+| `LiftCap` (B) | The run ended at a construct the lifted module does not carry - the *module's* extent, not the program's behavior. | `Empirical` |
 | `SealedDerivation` (C) | A digest or address derived from attacker-derived bytes is sealed to the real implementation's answer for *this* input. | `Conditional` |
 | `UnmodelledAddress` (D) | The walk used a symbolic address outside its bounded window; more solver time cannot change the answer. | `Unknown` |
 | `SolverGaveUp` | The solver hit a configured bound before a verdict. | `Unknown` |
 | `EngineLimit` | An engine-internal replay limit (divergence, walk budget, host-model limit). | `Unknown` |
-| `GuestTrap` | The engine's reference run trapped — the program's own behavior as modelled. The note states the trap; a failed symbolic replay is a separate `EngineLimit` note. | `Empirical` |
+| `GuestTrap` | The engine's reference run trapped - the program's own behavior as modelled. The note states the trap; a failed symbolic replay is a separate `EngineLimit` note. | `Empirical` |
 | `Unclassified` | No rule matched. Kept verbatim and counted. | `Unknown` |
 
 ### The flip ledger
@@ -197,11 +197,11 @@ solver claim.
 | `SolverUnknown` | The solver hit a bound before a verdict. | `Unknown` |
 | `NotPosed` | No verification run was spent. | `Unknown` |
 | `RunFailed` | The verification run failed at the engine level. | `Empirical` |
-| `Unconfirmed` | The model ran but did not take the opposite side — walker and engine disagree. Evidence against the *model*, never for the program (Proposition 5). | `Empirical` |
+| `Unconfirmed` | The model ran but did not take the opposite side - walker and engine disagree. Evidence against the *model*, never for the program (Proposition 5). | `Empirical` |
 
 The two exact universal claims (`ProvenUnflippable`) rest on Theorem 2; the
 exact existential claim (`Verified`) rests on Theorem 3. Both are relative to
-the solver's semantics — the trusted computing base — and the certificates say
+the solver's semantics - the trusted computing base - and the certificates say
 so rather than implying independent proof.
 
 ### The property ledger
@@ -214,7 +214,7 @@ each walked path.
 | `PropertyOutcome` | Means | Trust |
 |---|---|---|
 | `Confirmed` | The solver's model was applied and the engine's own run reproduced a violating readback. A machine-checked witness (Theorem 6). | `Exact` |
-| `Proven` | `Unsat` under this path's assumptions — no input reaching *this path* violates the invariant. A local negative (Theorem 5), not a program-wide proof. | `Exact` |
+| `Proven` | `Unsat` under this path's assumptions - no input reaching *this path* violates the invariant. A local negative (Theorem 5), not a program-wide proof. | `Exact` |
 | `SolverUnknown` | The solver hit a bound before a verdict. | `Unknown` |
 | `NotPosed` | No verification run was spent: the budget was exhausted, an operand has no symbolic form, or the run trapped with no post-state to read. | `Unknown` |
 | `RunFailed` | The model was applied and the re-run trapped or failed at the engine level. | `Empirical` |
@@ -231,14 +231,14 @@ Trust is a function of the *kind* of claim, not of how good the session felt.
 | Trust | Meaning |
 |---|---|
 | `Exact` | A machine-checked fact about a run that happened (a verified flip, a reproduced violation, a stated stop) or a completed solver verdict. |
-| `Conditional` | True of the concrete run, conditional on its input — a sealed value. |
+| `Conditional` | True of the concrete run, conditional on its input - a sealed value. |
 | `Empirical` | Observed engine behavior, not a proof. |
 | `Unknown` | The absence of a verdict. |
 | `SoundOverApprox` | **Reserved.** Nothing in M1 earns it, and nothing may claim it until the reasoning that justifies it exists. |
 
 Proposition 8 is the upper-bound law: a claim is never more trusted than its
 weakest load-bearing evidence. Proposition 9 says certificates do not compose
-for free — an `Exact` witness and an `Exact` universal verdict do not add up
+for free - an `Exact` witness and an `Exact` universal verdict do not add up
 to an `Exact` mixed claim without new reasoning.
 
 ---
@@ -246,7 +246,7 @@ to an `Exact` mixed claim without new reasoning.
 ## Determinism
 
 `Diagnosis` is a pure function of `(Report, Opts, Classifier)` (Theorem 7).
-Same inputs, same bytes out — there is no clock, no randomness, no hash-map
+Same inputs, same bytes out - there is no clock, no randomness, no hash-map
 iteration order in the rendered form. That makes a diagnosis diffable in CI:
 you can pin the rendered text as a golden artifact, and a change in it is a
 change in semantics rather than in presentation.
@@ -279,7 +279,7 @@ cargo run -p lacuna-core --example 05_coverage_gate
 | 2 | `02_stop_honesty` | The four stops side by side and the honesty assertions: silence must never read as coverage. |
 | 3 | `03_frontend_classifier` | Extending the classifier without teaching the public crate a private vocabulary; unknown → named; `Unknown` → `Conditional`; precedence is order. |
 | 4 | `04_property_ledger` | All six property outcomes, their three distinct kinds of claim, and why `NotPosed` stays `Unknown`. |
-| 5 | `05_coverage_gate` | Using the diagnosis as a conservative, machine-readable coverage gate — refusing to assume an unclassified gap is *not* a model boundary, refusing to promote an emptied frontier to coverage when an attempt never resolved, and keeping the property ledger's open questions open. |
+| 5 | `05_coverage_gate` | Using the diagnosis as a conservative, machine-readable coverage gate - refusing to assume an unclassified gap is *not* a model boundary, refusing to promote an emptied frontier to coverage when an attempt never resolved, and keeping the property ledger's open questions open. |
 
 Example 5 is the intended downstream pattern: a CI gate reads public fields,
 never prose, and returns a verdict that cannot be stronger than the evidence.
@@ -311,7 +311,7 @@ let diagnosis = diagnose_with(&report, &Opts::default(), &classifier);
 ```
 
 `prepend` is the entire extension mechanism. Rules are tried in order, so
-precedence is order, not specificity-by-magic — put specific patterns before
+precedence is order, not specificity-by-magic - put specific patterns before
 broad ones. A vendor adapter is a thin module outside this crate that owns its
 vocabulary; the public crate stays frontend-invariant, and a note nobody
 recognizes stays `Unclassified` instead of being guessed into a class.
@@ -328,11 +328,11 @@ refer to *LACUNA: The Demand-Driven Semantic Closure Engine* (rev 2, 17 Oct
 |---|---|
 | Frontend invariance / report as interface | §2.1 |
 | The diagnosis problem and algorithm | §4, §4.1 |
-| Stop table and adequacy of exhaustion | §5.1–5.3, Theorem 1 |
-| Blocker taxonomy; classifier totality | §6.1–6.4, Proposition 3 |
-| Flip outcome algebra; witness validity | §7.1–7.5, Proposition 4, Theorem 2, Theorem 3, Proposition 5 |
+| Stop table and adequacy of exhaustion | §5.1-5.3, Theorem 1 |
+| Blocker taxonomy; classifier totality | §6.1-6.4, Proposition 3 |
+| Flip outcome algebra; witness validity | §7.1-7.5, Proposition 4, Theorem 2, Theorem 3, Proposition 5 |
 | Property-directed queries | §7.5, §12.3, Theorem 4, Theorem 5, Theorem 6, Proposition 6, Proposition 7 |
-| Trust calculus; upper-bound law | §8.1–8.3, Proposition 8, Proposition 9 |
+| Trust calculus; upper-bound law | §8.1-8.3, Proposition 8, Proposition 9 |
 | Deterministic rendering | §9, Theorem 7 |
 | `SoundOverApprox` (reserved) | §10, §11 |
 | Limitations and trusted computing base | §14 |
@@ -353,7 +353,7 @@ refer to *LACUNA: The Demand-Driven Semantic Closure Engine* (rev 2, 17 Oct
   `ExhaustedUnresolved` is **M2**. M1 already checks Theorem 1's side
   condition at diagnosis time (`coverage_licensed`), but the stop value in the
   report itself does not yet carry the split.
-- **M3+** — contract synthesis, the soundness gate, and the closure scheduler —
+- **M3+** - contract synthesis, the soundness gate, and the closure scheduler -
   stay unbuilt until M1/M2 prove the diagnosis is right on real campaigns.
 
 What M1 claims is accordingly narrow: *this* is the stop, *these* are the

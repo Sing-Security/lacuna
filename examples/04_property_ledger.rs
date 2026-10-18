@@ -1,4 +1,4 @@
-//! The property ledger — six outcomes, three different kinds of claim.
+//! The property ledger - six outcomes, three different kinds of claim.
 //!
 //! Run with:
 //!

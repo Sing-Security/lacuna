@@ -1,4 +1,4 @@
-//! A complete, exhausted session — the diagnosis at its strongest.
+//! A complete, exhausted session - the diagnosis at its strongest.
 //!
 //! Run with:
 //!

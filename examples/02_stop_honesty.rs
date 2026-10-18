@@ -1,4 +1,4 @@
-//! The stop table — what each stop means, and what it does **not** mean.
+//! The stop table - what each stop means, and what it does **not** mean.
 //!
 //! Run with:
 //!
@@ -11,7 +11,7 @@
 //! `max_runs: 16`. That is why [`diagnose`] takes the budgets the session ran
 //! under, not just the report.
 //!
-//! The stop certificate is `Exact` in every stated case — the stop *is* a
+//! The stop certificate is `Exact` in every stated case - the stop *is* a
 //! machine-checked fact about the run. What varies is the scope of the claim,
 //! which the variant's text states in so many words. `Undetermined` is the
 //! one stop that is itself `Unknown`.
