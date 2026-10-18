@@ -339,24 +339,20 @@ refer to *LACUNA: The Demand-Driven Semantic Closure Engine* (rev 2, 17 Oct
 
 ---
 
-## Known incompleteness (stated, not hidden)
+## Limitations
 
-- **Unmodelled calls the model *answered*** are recorded by some hosts as sink
-  records rather than report gaps, so M1 cannot cite them. Harvesting them
-  into the report is **M1.1**.
-- The classifier reads free-text gaps. Structured gap kinds are **M2**, with
-  the binding that the raw text stays byte-identical in the report.
-- **M2** also carries per-path records for true per-sink causal attribution,
-  the exhausted-true-with-unswept-suffix detector at the budget edge, and a
-  per-path causal record for each `Unconfirmed`.
-- The structural split of `Exhausted` into `Exhausted` /
-  `ExhaustedUnresolved` is **M2**. M1 already checks Theorem 1's side
-  condition at diagnosis time (`coverage_licensed`), but the stop value in the
-  report itself does not yet carry the split.
-- **M3+** - contract synthesis, the soundness gate, and the closure scheduler -
-  stay unbuilt until M1/M2 prove the diagnosis is right on real campaigns.
+- The diagnosis reads only what the engine recorded. An unmodelled call that a
+  host answers through a sink record rather than a gap note is not cited.
+- Gaps are free text. An unrecognized note stays `Unclassified`: preserved
+  verbatim and counted, never guessed into a class.
+- Only decision coverage is licensed. `Exhausted` is relative to the decisions
+  the solver saw and says nothing about the program's full input domain; open
+  property queries are reported, not resolved.
+- This crate diagnoses; it does not repair or synthesize contracts. Reasoning
+  above the report layer, including any sound over-approximation, is out of
+  scope for this release.
 
-What M1 claims is accordingly narrow: *this* is the stop, *these* are the
+What the diagnosis claims stays narrow: *this* is the stop, *these* are the
 blockers, *these* are the exact outcomes, and *this* is the strongest thing
 any of it licenses. Narrow and true beats broad and unearned.
 
