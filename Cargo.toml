@@ -1,0 +1,22 @@
+[package]
+name = "lacuna-core"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.85"
+license = "Apache-2.0"
+description = "Diagnosis without repair: typed stops, flip and property ledgers, and trust-carrying certificates over a concolic report"
+readme = "README.md"
+repository = "https://github.com/Sing-Security/lacuna"
+documentation = "https://docs.rs/lacuna-core"
+keywords = ["concolic", "symbolic-execution", "diagnosis", "verification"]
+categories = ["development-tools", "development-tools::testing"]
+publish = true
+
+[lints.rust]
+unsafe_code = "deny"
+
+[lints.clippy]
+all = { level = "deny", priority = -1 }
+
+[dependencies]
+concolic-core = "0.1.1"
